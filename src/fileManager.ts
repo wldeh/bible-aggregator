@@ -4,7 +4,7 @@ import fs from 'fs'
 import fetch, { Response } from 'node-fetch'
 
 export default class fileManager {
-  protected static async getDownloadLink(url: string): Promise<string> {
+  public static async getDownloadLink(url: string): Promise<string> {
     try {
       const response: Response = await fetch(url)
       const data: string = await response.text()
@@ -14,12 +14,12 @@ export default class fileManager {
         $('#download_button').attr('href')
       return href
     } catch (error) {
-      console.error(error)
+      //console.error(error)
       throw error
     }
   }
 
-  protected static async download(
+  public static async download(
     url: string,
     downloadPath: string
   ): Promise<void> {
@@ -43,7 +43,7 @@ export default class fileManager {
     }
   }
 
-  protected static async unzip(
+  public static async unzip(
     outPath: string,
     downloadPath: string
   ): Promise<void> {
@@ -62,10 +62,8 @@ export default class fileManager {
       const downloadLink: string = await this.getDownloadLink(url)
       await this.download(downloadLink, downloadPath)
       await this.unzip(outPath, downloadPath)
-      // Delete the temporary file
       fs.unlinkSync(downloadPath)
     } catch (error) {
-      // Handle errors here
       console.error(error)
     }
   }
