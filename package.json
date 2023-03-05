@@ -20,12 +20,13 @@
   },
   "homepage": "https://github.com/ucig/bible-api#readme",
   "dependencies": {
-    "@types/cheerio": "^0.22.31",
-    "cheerio": "^1.0.0-rc.12"
+    "cheerio": "^1.0.0-rc.12",
+    "unzip-stream": "^0.3.1"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@types/node": "^18.11.9",
+    "@types/cheerio": "^0.22.31",
     "@vitest/coverage-c8": "^0.28.4",
     "del-cli": "^5.0.0",
     "lint-staged": "^13.0.3",

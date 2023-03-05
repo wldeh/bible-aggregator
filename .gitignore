@@ -3,6 +3,7 @@ sources.txt
 test.json
 /node_modules
 USX_1
+file.zip
 
 # production
 /dist
