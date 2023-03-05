@@ -1,0 +1,41 @@
+{
+  "name": "bible-api",
+  "version": "1.0.0",
+  "description": "Free Bible API offering extensive support for various versions and languages.",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ucig/bible-api.git"
+  },
+  "keywords": [
+    "bible"
+  ],
+  "author": "ucig",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ucig/bible-api/issues"
+  },
+  "homepage": "https://github.com/ucig/bible-api#readme",
+  "dependencies": {
+    "@types/cheerio": "^0.22.31",
+    "cheerio": "^1.0.0-rc.12"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.0.0",
+    "@types/node": "^18.11.9",
+    "@vitest/coverage-c8": "^0.28.4",
+    "del-cli": "^5.0.0",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.5.1",
+    "tsup": "^6.5.0",
+    "tsx": "^3.12.1"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write"
+    ]
+  }
+}

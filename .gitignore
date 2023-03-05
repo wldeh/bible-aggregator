@@ -1,0 +1,21 @@
+# misc
+sources.txt
+test.json
+/node_modules
+USX_1
+
+# production
+/dist
+/build
+
+# typescript
+*.tsbuildinfo
+
+# local env files
+.env
+
+# data dumps
+out/
+
+# testing
+/coverage
