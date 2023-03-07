@@ -77,7 +77,7 @@ export default class fileManager {
       const downloadLink: string = await this.getDownloadLink(url)
       await this.download(downloadLink, downloadPath)
       await this.unzip(outPath, downloadPath)
-      fs.unlinkSync(downloadPath)
+      await fs.promises.unlink(downloadPath)
     } catch (error) {
       throw new FileManagerError(
         `importFolder failed: ${error.message}`,
@@ -87,5 +87,36 @@ export default class fileManager {
     }
   }
 
-  public static async getBibleInfo() {}
+  public static async createDirs(books, bibleInfo) {
+    const filteredBooks = this.getHighestChapters(books)
+
+    const data = JSON.parse(fs.readFileSync('./bibles/bibles.json', 'utf8'))
+    data.push(bibleInfo)
+    fs.writeFileSync('./bibles/bibles.json', JSON.stringify(data, null))
+
+    for (const book of filteredBooks) {
+      for (var i = 1; i <= book.chapter; i++) {
+        const dir = `./bibles/${bibleInfo.id}/books/${book.name
+          .toLowerCase()
+          .replaceAll(' ', '')}/chapters/${i}/verses`
+
+        fs.mkdirSync(dir, { recursive: true })
+      }
+    }
+  }
+
+  private static getHighestChapters(data) {
+    return data.reduce((acc, curr) => {
+      const existing = acc.find((item) => item.name === curr.name)
+      if (existing) {
+        if (Number(existing.chapter) < Number(curr.chapter)) {
+          existing.chapter = curr.chapter
+          existing.verses = curr.verses
+        }
+      } else {
+        acc.push(curr)
+      }
+      return acc
+    }, [])
+  }
 }

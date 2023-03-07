@@ -3,7 +3,6 @@ import fetch from 'node-fetch'
 
 import fileManager from './fileManager'
 
-//jest.mock('node-fetch')
 jest.mock('node-fetch', () => jest.fn())
 jest.mock('fs')
 
@@ -50,14 +49,12 @@ describe('fileManager', () => {
         'https://app.thedigitalbiblelibrary.org/entry/download_listing?id=06125adad2d5898a&license=4013&revision='
       const outPath = '/tmp/folder'
 
-      // Mock the getDownloadLink method to return a fake download link
       const mockGetDownloadLink = jest
         .spyOn(fileManager, 'getDownloadLink')
         .mockResolvedValue(
           'https://app.thedigitalbiblelibrary.org/entry/download_archive?id=06125adad2d5898a&license=4013&revision=13&type=release'
         )
 
-      // Mock the download method to write a fake zip file to disk
       const mockDownload = jest
         .spyOn(fileManager, 'download')
         .mockImplementation((url, downloadPath) => {
@@ -65,7 +62,6 @@ describe('fileManager', () => {
           return Promise.resolve()
         })
 
-      // Mock the unzip method to extract the fake zip file
       const mockUnzip = jest.spyOn(fileManager, 'unzip').mockResolvedValue()
 
       await fileManager.importFolder(url, outPath)
