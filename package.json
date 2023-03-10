@@ -26,7 +26,6 @@
     "@types/jest": "^29.4.0",
     "@types/node": "^18.11.9",
     "@vitest/coverage-c8": "^0.28.4",
-    "del-cli": "^5.0.0",
     "eslint": "^8.5.0",
     "eslint-config-prettier": "^9.0.1",
     "eslint-plugin-prettier": "^4.0.0",
