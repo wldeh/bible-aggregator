@@ -1,4 +1,4 @@
-interface versionInfo {
+export interface versionInfo {
   id: string
   version: string
   description: string
