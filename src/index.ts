@@ -11,6 +11,3 @@ async function main(url: string): Promise<void> {
   await Content.populate(outPath, bibleInfo)
 }
 
-main(
-  'https://app.thedigitalbiblelibrary.org/entry/download_listing?id=06125adad2d5898a&license=4013&revision='
-)
