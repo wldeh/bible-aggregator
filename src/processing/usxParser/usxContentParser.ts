@@ -11,7 +11,7 @@ export default async function parseUSX(folder: string): Promise<types.Verse[]> {
   const $I = cheerio.load(infoFile)
 
   const files = await Directory.readFolder(folder)
-  let usxFiles = files.filter((path) => path.endsWith('.usx'))
+  const usxFiles = files.filter((path) => path.endsWith('.usx'))
 
   for (const file of usxFiles) {
     const usxData = await fs.promises.readFile(file)
@@ -36,7 +36,7 @@ export default async function parseUSX(folder: string): Promise<types.Verse[]> {
       .get()
       .filter((a) => a.verse && a.text)
 
-    array = array.concat(verses)
+    array = [...array, ...verses]
   }
 
   return array
