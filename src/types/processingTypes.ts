@@ -16,9 +16,3 @@ export interface ContentItem {
   chapter: string
   verses: Verse[]
 }
-
-export interface BookInfo {
-  name: string
-  chapter: string
-  verses: string
-}

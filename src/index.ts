@@ -10,4 +10,3 @@ async function main(url: string): Promise<void> {
   await Directory.createDirs(books, bibleInfo)
   await Content.populate(outPath, bibleInfo)
 }
-

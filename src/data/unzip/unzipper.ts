@@ -1,5 +1,5 @@
-import * as unzipFile from 'unzip-stream';
-import fs from 'fs';
+import * as unzipFile from 'unzip-stream'
+import fs from 'fs'
 
 export default async function unzip(
   outPath: string,
@@ -10,9 +10,9 @@ export default async function unzip(
       fs.createReadStream(downloadPath)
         .pipe(unzipFile.Extract({ path: outPath }))
         .on('error', reject)
-        .on('finish', resolve);
-    });
+        .on('finish', resolve)
+    })
   } catch (error) {
-    throw new Error(`unzip failed: ${error.message}`);
+    throw new Error(`unzip failed: ${error.message}`)
   }
 }

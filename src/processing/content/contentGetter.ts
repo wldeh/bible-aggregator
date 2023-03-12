@@ -5,14 +5,14 @@ import fs from 'fs'
 
 import usxParser from '../usxParser'
 
-export async function booksInfo(outPath: string): Promise<types.BookInfo[]> {
+export async function booksInfo(outPath: string): Promise<types.DataItem[]> {
   const infoFile = fs.readFileSync(outPath + '/metadata.xml')
   const $ = cheerio.load(infoFile)
   const data = fs
     .readFileSync(outPath + '/release/versification.vrs', 'utf8')
     .replace(/\n/g, ' ')
 
-  const result: types.BookInfo[] = []
+  const result: types.DataItem[] = []
   let book = ''
   let chapter = ''
   let verse = ''
