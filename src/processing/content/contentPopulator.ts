@@ -4,11 +4,9 @@ import fs from 'fs'
 
 import Content from '.'
 
-export default async function populate(
-  outPath: string,
-  bibleInfo: global.versionInfo
-): Promise<void> {
+export default async function populate(outPath: string): Promise<void> {
   const data = JSON.parse(fs.readFileSync('./bibles/bibles.json', 'utf8'))
+  const bibleInfo = await Content.getInfo(outPath)
 
   if (!data.includes(JSON.stringify(bibleInfo))) data.push(bibleInfo)
   else throw new Error('Already imported bible')
