@@ -1,88 +1,137 @@
 import fs from 'fs'
 
-import populate from 'src/processing/content/contentPopulator'
+import Content from '../../../src/processing/content'
+import populate from '../../../src/processing/content/contentPopulator'
 
 jest.mock('fs')
+jest.mock('../../../src/processing/content')
 
 describe('populate', () => {
-  afterEach(() => {
+  beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  it('should add bibleInfo to bibles.json if it does not already exist', async () => {
-    const outPath = 'testOutPath'
-    const bibleInfo = {
-      id: 'test',
-      version: 'Test Version',
-      description: 'Test Description',
-      scope: 'Test',
-      language: {
-        name: 'Test Language',
-        code: 'test',
-        level: 'Test'
-      },
-      country: {
-        name: 'Test Country',
-        code: 'test'
-      },
-      numeralSystem: 'Test',
-      script: 'Test',
-      archivist: 'Test Archivist',
-      copyright: 'Test',
-      localVersionName: 'Test Local Version Name',
-      localVersionAbbreviation: 'Test Local Version Abbreviation'
-    }
-    const biblesData = [{ id: 'otherId', name: 'otherName' }]
+  test('throws an error when the bible with the same id already exists', async () => {
+    const bibleInfo = { id: 'existingBible' }
+    const data = [{ id: 'existingBible' }]
 
-    const readFileSyncMock = jest
-      .spyOn(fs, 'readFileSync')
-      .mockReturnValueOnce(JSON.stringify(biblesData))
+    ;(fs.readFileSync as jest.Mock).mockReturnValueOnce(JSON.stringify(data))
+    ;(Content.getInfo as jest.Mock).mockResolvedValueOnce(bibleInfo)
 
-    const writeFileSyncMock = jest.spyOn(fs, 'writeFileSync')
+    await expect(populate('outPath')).rejects.toThrow('Already imported bible')
+  })
 
-    await populate(outPath, bibleInfo)
+  test('creates the correct file structure for the new bible', async () => {
+    const bibleInfo = { id: 'newBible' }
+    const data = [{ id: 'existingBible' }]
+    const contents = [
+      {
+        book: 'Book 1',
+        chapter: 1,
+        verses: [
+          { verse: 1, text: 'Verse 1 text' },
+          { verse: 2, text: 'Verse 2 text' }
+        ]
+      }
+    ]
 
-    expect(readFileSyncMock).toHaveBeenCalledWith(
-      './bibles/bibles.json',
-      'utf8'
+    ;(fs.readFileSync as jest.Mock).mockReturnValueOnce(JSON.stringify(data))
+    ;(Content.getInfo as jest.Mock).mockResolvedValueOnce(bibleInfo)
+    ;(Content.getContent as jest.Mock).mockResolvedValueOnce(contents)
+
+    await populate('outPath')
+
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      './bibles/newBible/books/book1/chapters/1.json',
+      JSON.stringify({ data: contents[0].verses })
     )
-    expect(writeFileSyncMock).toHaveBeenCalledWith(
-      './bibles/bibles.json',
-      JSON.stringify([...biblesData, bibleInfo], null)
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      './bibles/newBible/books/book1/chapters/1/verses/1.json',
+      JSON.stringify({ verse: 1, text: 'Verse 1 text' })
+    )
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      './bibles/newBible/books/book1/chapters/1/verses/2.json',
+      JSON.stringify({ verse: 2, text: 'Verse 2 text' })
     )
   })
 
-  it('should throw an error if bibleInfo already exists in bibles.json', async () => {
-    const outPath = 'testOutPath'
-    const bibleInfo = {
-      id: 'test',
-      version: 'Test Version',
-      description: 'Test Description',
-      scope: 'Test',
-      language: {
-        name: 'Test Language',
-        code: 'test',
-        level: 'Test'
-      },
-      country: {
-        name: 'Test Country',
-        code: 'test'
-      },
-      numeralSystem: 'Test',
-      script: 'Test',
-      archivist: 'Test Archivist',
-      copyright: 'Test',
-      localVersionName: 'Test Local Version Name',
-      localVersionAbbreviation: 'Test Local Version Abbreviation'
-    }
-    const biblesData = [bibleInfo]
+  test('writes the correct data to the book, chapter, and verse files', async () => {
+    const bibleInfo = { id: 'newBible' }
+    const data = [{ id: 'existingBible' }]
+    const contents = [
+      {
+        book: 'Book 1',
+        chapter: 1,
+        verses: [
+          { verse: 1, text: 'Verse 1 text' },
+          { verse: 2, text: 'Verse 2 text' }
+        ]
+      }
+    ]
 
-    jest
-      .spyOn(fs, 'readFileSync')
-      .mockReturnValueOnce(JSON.stringify(biblesData))
+    ;(fs.readFileSync as jest.Mock).mockReturnValueOnce(JSON.stringify(data))
+    ;(Content.getInfo as jest.Mock).mockResolvedValueOnce(bibleInfo)
+    ;(Content.getContent as jest.Mock).mockResolvedValueOnce(contents)
 
-    await expect(populate(outPath, bibleInfo)).rejects.toThrow(
-      'Already imported bible'
+    await populate('outPath')
+
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      './bibles/newBible/books/book1/chapters/1.json',
+      JSON.stringify({ data: contents[0].verses })
+    )
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      './bibles/newBible/books/book1/chapters/1/verses/1.json',
+      JSON.stringify({ verse: 1, text: 'Verse 1 text' })
+    )
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      './bibles/newBible/books/book1/chapters/1/verses/2.json',
+      JSON.stringify({ verse: 2, text: 'Verse 2 text' })
+    )
+  })
+
+  test('does not overwrite existing data in the bibles.json file or in the book, chapter, and verse files', async () => {
+    const bibleInfo = { id: 'newBible' }
+    const data = [{ id: 'existingBible' }]
+    const contents = [
+      {
+        book: 'Book 1',
+        chapter: 1,
+        verses: [
+          { verse: 1, text: 'Verse 1 text' },
+          { verse: 2, text: 'Verse 2 text' }
+        ]
+      }
+    ]
+
+    ;(fs.readFileSync as jest.Mock).mockReturnValueOnce(JSON.stringify(data))
+    ;(Content.getInfo as jest.Mock).mockResolvedValueOnce(bibleInfo)
+    ;(Content.getContent as jest.Mock).mockResolvedValueOnce(contents)
+
+    await populate('outPath')
+
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      './bibles/bibles.json',
+      JSON.stringify([...data, bibleInfo])
+    )
+    expect(fs.writeFileSync).not.toHaveBeenCalledWith(
+      './bibles/bibles.json',
+      JSON.stringify([bibleInfo])
+    )
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      './bibles/newBible/books/book1/chapters/1.json',
+      JSON.stringify({ data: contents[0].verses })
+    )
+    expect(fs.writeFileSync).not.toHaveBeenCalledWith(
+      './bibles/newBible/books/book1/chapters/1.json',
+      JSON.stringify({ data: [] })
+    )
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      './bibles/newBible/books/book1/chapters/1/verses/1.json',
+      JSON.stringify({ verse: 1, text: 'Verse 1 text' })
+    )
+    expect(fs.writeFileSync).not.toHaveBeenCalledWith(
+      './bibles/newBible/books/book1/chapters/1/verses/1.json',
+      JSON.stringify({ verse: 1, text: '' })
     )
   })
 })
