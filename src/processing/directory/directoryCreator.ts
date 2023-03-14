@@ -8,7 +8,7 @@ import Content from '../content'
 export default async function createDirs(outPath: string): Promise<void> {
   const bibleInfo = await Content.getInfo(outPath)
   const books = await Content.booksInfo(outPath)
-  const filteredBooks: any = await Directory.getHighestChapters(books)
+  const filteredBooks: any = Directory.getHighestChapters(books)
 
   const data = JSON.parse(fs.readFileSync('./bibles/bibles.json', 'utf8'))
   data.push(bibleInfo)
