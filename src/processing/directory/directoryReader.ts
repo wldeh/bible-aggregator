@@ -10,7 +10,7 @@ export async function readFolder(currentDir: string): Promise<string[]> {
   })
 
   for (const entry of entries) {
-    const fullPath = path.join(currentDir, entry.name)
+    const fullPath: string = path.join(currentDir, entry.name)
 
     if (entry.isDirectory()) {
       files = files.concat(await readFolder(fullPath))
