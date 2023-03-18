@@ -3,15 +3,22 @@ import * as types from 'src/types/processingTypes'
 import fs from 'fs'
 
 import Content from '.'
+import Files from '../../../src/data/files'
 
 export default async function populate(outPath: string): Promise<void> {
   const data = JSON.parse(fs.readFileSync('./bibles/bibles.json', 'utf8'))
-  const bibleInfo = await Content.getInfo(outPath)
+  const bibleInfo: global.versionInfo = await Content.getInfo(outPath)
 
-  if (!data.includes(JSON.stringify(bibleInfo))) data.push(bibleInfo)
-  else throw new Error('Already imported bible')
+  if (data.some((bible: global.versionInfo) => bible.id === bibleInfo.id))
+    throw new Error('Already imported bible')
 
+  data.push(bibleInfo)
   fs.writeFileSync('./bibles/bibles.json', JSON.stringify(data, null))
+  fs.writeFileSync(
+    `./bibles/${bibleInfo.id}/${bibleInfo.id}.json`,
+    JSON.stringify(bibleInfo, null)
+  )
+
   const contents: types.ContentItem[] = await Content.getContent(outPath)
 
   for (let i = 0; i < contents.length; i++) {
@@ -37,4 +44,6 @@ export default async function populate(outPath: string): Promise<void> {
       )
     }
   }
+
+  await Files.deleteFolder(outPath)
 }

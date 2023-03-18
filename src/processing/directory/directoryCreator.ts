@@ -10,10 +10,6 @@ export default async function createDirs(outPath: string): Promise<void> {
   const books = await Content.booksInfo(outPath)
   const filteredBooks: any = Directory.getHighestChapters(books)
 
-  const data = JSON.parse(fs.readFileSync('./bibles/bibles.json', 'utf8'))
-  data.push(bibleInfo)
-  fs.writeFileSync('./bibles/bibles.json', JSON.stringify(data, null))
-
   for (const book of filteredBooks) {
     for (let i = 1; i <= book.chapter; i++) {
       const dir = `./bibles/${bibleInfo.id}/books/${book.name

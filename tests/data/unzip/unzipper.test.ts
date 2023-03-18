@@ -1,7 +1,7 @@
 import * as unzipFile from 'unzip-stream'
 import fs from 'fs'
 
-import unzip from '../../../src/data/unzip/unzipper'
+import unzip from '../../../src/data/files/unzipper'
 
 jest.mock('fs')
 jest.mock('unzip-stream')
