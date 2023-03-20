@@ -37,10 +37,10 @@ export async function getInfo(outPath: string): Promise<global.versionInfo> {
   const infoFile = await fs.promises.readFile(outPath + '/metadata.xml')
   const $ = cheerio.load(infoFile)
   return {
-    id: `${$('ldml').text()}-${$('abbreviationLocal')
-      .first()
-      .text()
-      .toLowerCase()}`,
+    id: `${$('ldml').text() || $('language > iso').text()}-${
+      $('abbreviationLocal').first().text().toLowerCase() ||
+      $('abbreviation').first().text().toLowerCase()
+    }`,
     version: $('name').first().text(),
     description: $('description').first().text(),
     scope: $('scope').text(),
