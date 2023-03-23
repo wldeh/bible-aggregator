@@ -9,12 +9,14 @@ const url =
 
 export default async function main(): Promise<void> {
   try {
+    let count = 0
     const response: Response = await fetch(url)
     const initialData = await response.json()
     const array = initialData.aaData
 
     for await (const item of array) {
-      console.log(`Setting up: ${item[4]}`)
+      count++
+      console.log(`(${count / array.length}) Setting up: ${item[4]}`)
       await setupBible(
         `https://app.thedigitalbiblelibrary.org/entry?id=${item[0]}`
       )
@@ -35,5 +37,3 @@ async function setupBible(url: string): Promise<void> {
     console.error(`Error setting up Bible: ${error.message}`)
   }
 }
-
-//setupBible("https://app.thedigitalbiblelibrary.org/entry?id=9b076bc0f1856204")

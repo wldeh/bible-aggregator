@@ -5,28 +5,28 @@ import fs from 'fs'
 
 import usxParser from '../usxParser'
 
-export async function booksInfo(outPath: string): Promise<types.DataItem[]> {
+export async function booksInfo(outPath: string) {
   const infoFile = fs.readFileSync(outPath + '/metadata.xml')
   const $ = cheerio.load(infoFile)
-  const data = fs
-    .readFileSync(outPath + '/release/versification.vrs', 'utf8')
-    .replace(/\n/g, ' ')
+  const data = fs.readFileSync(outPath + '/release/versification.vrs')
 
-  const result: types.DataItem[] = []
-  let book = ''
-  let chapter = ''
-  let verse = ''
-  const lines = data.split(' ')
-  for (const line of lines) {
-    if (line.startsWith('#')) continue
-    if (line.match(/^[A-Z]+$/)) {
-      book = line
-    } else {
-      ;[chapter, verse] = line.split(':')
+  const result = []
+
+  const lines = data.toString().replace(/\r\n/g, '\n').split('\n')
+
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].includes('=') || lines[i].includes('#')) continue
+    const parts = lines[i].split(' ')
+
+    for (var x = 0; x < parts.length; x++) {
+      if (parts[i] !== undefined) if (!parts[i].includes(':')) continue
+
       result.push({
-        name: $(`name[id="book-${book.toLowerCase()}"] > short`).first().text(),
-        chapter: chapter,
-        verses: verse?.replace('\r', '')
+        name: $(`name[id="book-${parts[0].toLowerCase()}"] > short`)
+          .first()
+          .text(),
+        chapter: parts[x].split(':')[0],
+        verses: parts[x].split(':')[1]
       })
     }
   }
