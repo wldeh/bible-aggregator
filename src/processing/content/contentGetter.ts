@@ -30,7 +30,6 @@ export async function booksInfo(outPath: string) {
       })
     }
   }
-  
   return result.filter((a) => a.name !== '' && a.verses)
 }
 
