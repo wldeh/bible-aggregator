@@ -1,7 +1,9 @@
+//rewrite
 import * as types from 'src/types/processingTypes'
 import cheerio from 'cheerio'
 import fs from 'fs'
 import path from 'path'
+import { DOMParser } from 'xmldom'
 
 import Directory from '../directory'
 
@@ -21,24 +23,45 @@ export default async function parseUSX(folder: string): Promise<types.Verse[]> {
     const sid = $('*').filter(function () {
       return $(this).attr('sid') !== undefined
     })
+
     if (sid.length > 0) {
-      verses = $('verse')
-        .map((i, elem) => {
-          return {
-            book: $I(
-              `name[id="book-${path
-                .basename(file)
-                .replace('.usx', '')
-                .toLowerCase()}"] > short`
-            )
-              .first()
-              .text(),
-            chapter: $(elem).attr('sid')?.split(' ')[1].split(':')[0],
-            verse: $(elem).attr('number'),
-            text: $(elem)[0].next?.data?.trim() || null
+      let xmlString = fs.readFileSync(file).toString()
+      let parser = new DOMParser()
+      let xmlDoc = parser.parseFromString(xmlString, 'text/xml')
+      let tags = xmlDoc.getElementsByTagName('verse')
+      verses = Array.from(tags)
+        .map((verse) => {
+          if ((verse as any).hasAttribute('sid')) {
+            let chapterVerse = (verse as any).getAttribute('sid').split(' ')[1]
+            let [chapter, verseNumber] = chapterVerse.split(':')
+            let textContent = ''
+            let nextSibling = (verse as any).nextSibling
+            while (nextSibling && nextSibling.nodeName !== 'verse') {
+              textContent += nextSibling.textContent
+              nextSibling = nextSibling.nextSibling
+            }
+            return {
+              book: $I(
+                `name[id="book-${path
+                  .basename(file)
+                  .replace('.usx', '')
+                  .toLowerCase()}"] > short`
+              )
+                .first()
+                .text()
+                .replace(/first/i, '1')
+                .replace(/second/i, '2')
+                .replace(/third/i, '3'),
+              chapter: chapter,
+              verse: verseNumber,
+              text: textContent
+                .trim()
+                .split(`\n`)
+                [textContent.trim().split(`\n`).length - 1].trim()
+            }
           }
         })
-        .get()
+        .filter((a) => a)
         .filter((a) => a.verse && a.text)
     } else {
       verses = $('para').map(function () {
@@ -56,10 +79,13 @@ export default async function parseUSX(folder: string): Promise<types.Verse[]> {
                   .toLowerCase()}"] > short`
               )
                 .first()
-                .text(),
+                .text()
+                .replace(/first/i, '1')
+                .replace(/second/i, '2')
+                .replace(/third/i, '3'),
               chapter: chapterNumber,
               verse: verseNumber,
-              text: verseText
+              text: verseText.trim()
             }
           })
           .get()
