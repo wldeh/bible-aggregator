@@ -12,7 +12,10 @@ export default async function createDirs(outPath: string): Promise<void> {
     for (let i = 1; i <= book.chapter; i++) {
       const dir = `./bibles/${bibleInfo.id}/books/${book.name
         .toLowerCase()
-        .replaceAll(' ', '')}/chapters/${i}/verses`
+        .replaceAll(' ', '')
+        .replace(/first/i, '1')
+        .replace(/second/i, '2')
+        .replace(/third/i, '3')}/chapters/${i}/verses`
 
       fs.mkdirSync(dir, { recursive: true })
     }
