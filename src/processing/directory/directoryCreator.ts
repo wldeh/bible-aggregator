@@ -12,7 +12,7 @@ import Content from '../content';
 export default async function createDirs(outPath: string): Promise<void> {
   const bibleInfo = await Content.getInfo(outPath);
   const books = await Content.booksInfo(outPath);
-  const filteredBooks = await Directory.getHighestChapters(books);
+  const filteredBooks = Directory.getHighestChapters(books);
 
   for (const book of filteredBooks) {
     for (let i = 1; i <= Number(book.chapter); i++) {
