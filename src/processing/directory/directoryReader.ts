@@ -1,6 +1,6 @@
-import * as types from 'src/types/processingTypes'
 import fs from 'fs'
 import path from 'path'
+import { DataItem } from 'src/types/processingTypes'
 
 export async function readFolder(currentDir: string): Promise<string[]> {
   let files: string[] = []
@@ -22,8 +22,8 @@ export async function readFolder(currentDir: string): Promise<string[]> {
   return files
 }
 
-export function getHighestChapters(data: types.DataItem[]): types.DataItem[] {
-  return data.reduce((acc: types.DataItem[], curr: types.DataItem) => {
+export function getHighestChapters(data: DataItem[]): DataItem[] {
+  return data.reduce((acc: DataItem[], curr: DataItem) => {
     const existing = acc.find((item) => item.name === curr.name)
     if (existing) {
       if (Number(existing.chapter) < Number(curr.chapter)) {
