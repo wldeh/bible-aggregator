@@ -1,5 +1,5 @@
 export interface Verse {
-  book: string
+  book: string | undefined
   chapter: string | undefined
   verse: string | undefined
   text: string | null
