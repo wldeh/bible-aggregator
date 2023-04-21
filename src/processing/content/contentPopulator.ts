@@ -8,12 +8,6 @@ import Files from '../../../src/data/files'
 
 export default async function populate(outPath: string): Promise<void> {
   const data = JSON.parse(fs.readFileSync('./bibles/bibles.json', 'utf8'))
-  /*console.log(data.length)
-  console.log(data)
-  const path = await (fetch as any)('./bibles/bibles.json').then((response) =>
-    response.json()
-  )
-  console.log(path)*/
   const bibleInfo: global.versionInfo = await Content.getInfo(outPath)
 
   if (data.some((bible: global.versionInfo) => bible.id === bibleInfo.id)) {
