@@ -1,5 +1,4 @@
 import * as global from 'src/types/globalTypes'
-import * as types from 'src/types/processingTypes'
 import cheerio from 'cheerio'
 import fs from 'fs'
 
