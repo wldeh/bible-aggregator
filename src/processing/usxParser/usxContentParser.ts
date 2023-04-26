@@ -91,9 +91,7 @@ export default async function parseUSX(folder: string): Promise<types.Verse[]> {
           .get()
       })
     }
-
     array = [...array, ...verses]
   }
-
   return array
 }
