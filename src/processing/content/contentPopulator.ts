@@ -1,7 +1,6 @@
 import * as global from 'src/types/globalTypes'
 import * as types from 'src/types/processingTypes'
 import fs from 'fs'
-import fetch from 'node-fetch'
 
 import Content from '.'
 import Files from '../../../src/data/files'
