@@ -10,12 +10,12 @@
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "prepare": "husky install"
   },
-  "author": "ucig",
+  "author": "wldeh",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ucig/populate-bibles/issues"
+    "url": "https://github.com/wldeh/populate-bibles/issues"
   },
-  "homepage": "https://github.com/ucig/populate-bibles#readme",
+  "homepage": "https://github.com/wldeh/populate-bibles#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
     "path": "^0.12.7",
