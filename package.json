@@ -19,7 +19,8 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
     "path": "^0.12.7",
-    "unzip-stream": "^0.3.1"
+    "unzip-stream": "^0.3.1",
+    "xmldom": "^0.6.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
