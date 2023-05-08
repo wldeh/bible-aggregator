@@ -1,4 +1,5 @@
 import * as global from 'src/types/globalTypes'
+import * as types from 'src/types/processingTypes'
 import cheerio from 'cheerio'
 import fs from 'fs'
 
@@ -21,7 +22,13 @@ export async function booksInfo(outPath: string) {
       if (parts[i] !== undefined) if (!parts[i].includes(':')) continue
 
       result.push({
-        name: $(`name[id="book-${parts[0].toLowerCase()}"] > short`)
+        name: $(
+          `name[id="book-${parts[0]
+            .toLowerCase()
+            .replace(/first/i, '1')
+            .replace(/second/i, '2')
+            .replace(/third/i, '3')}"] > short`
+        )
           .first()
           .text(),
         chapter: parts[x].split(':')[0],
@@ -29,6 +36,7 @@ export async function booksInfo(outPath: string) {
       })
     }
   }
+
   return result.filter((a) => a.name !== '' && a.verses)
 }
 
@@ -70,10 +78,18 @@ export async function getContent(outPath: string) {
 
   for (var i = 0; i < arr.length; i++) {
     array.push({
-      book: arr[i].name,
+      book: arr[i].name
+        .replace(/first/i, '1')
+        .replace(/second/i, '2')
+        .replace(/third/i, '3'),
       chapter: arr[i].chapter,
       verses: usx.filter(
-        (a: any) => a.book == arr[i].name && a.chapter == arr[i].chapter
+        (a: any) =>
+          a.book ==
+            arr[i].name
+              .replace(/first/i, '1')
+              .replace(/second/i, '2')
+              .replace(/third/i, '3') && a.chapter == arr[i].chapter
       )
     })
   }

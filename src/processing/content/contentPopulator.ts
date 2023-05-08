@@ -7,6 +7,7 @@ import Files from '../../../src/data/files'
 
 export default async function populate(outPath: string): Promise<void> {
   const data = JSON.parse(fs.readFileSync('./bibles/bibles.json', 'utf8'))
+
   const bibleInfo: global.versionInfo = await Content.getInfo(outPath)
 
   if (data.some((bible: global.versionInfo) => bible.id === bibleInfo.id)) {
@@ -26,7 +27,10 @@ export default async function populate(outPath: string): Promise<void> {
   for (let i = 0; i < contents.length; i++) {
     const chapterPath = `./bibles/${bibleInfo.id}/books/${contents[i]?.book
       .toLowerCase()
-      .replaceAll(' ', '')}/chapters/${contents[i].chapter}.json`
+      .replaceAll(' ', '')
+      .replace(/first/i, '1')
+      .replace(/second/i, '2')
+      .replace(/third/i, '3')}/chapters/${contents[i].chapter}.json`
     fs.writeFileSync(
       chapterPath,
       JSON.stringify({ data: contents[i].verses.map((a) => a) })
@@ -34,7 +38,10 @@ export default async function populate(outPath: string): Promise<void> {
     for (let x = 0; x < contents[i].verses.length; x++) {
       const versePath = `./bibles/${bibleInfo.id}/books/${contents[i].book
         .toLowerCase()
-        .replaceAll(' ', '')}/chapters/${contents[i].chapter}/verses/${
+        .replaceAll(' ', '')
+        .replace(/first/i, '1')
+        .replace(/second/i, '2')
+        .replace(/third/i, '3')}/chapters/${contents[i].chapter}/verses/${
         contents[i].verses[x].verse
       }.json`
       fs.writeFileSync(
