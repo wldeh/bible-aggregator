@@ -1,7 +1,7 @@
-import deleteFolder from './delete'
-import unzip from './unzipper'
+import deleteFolder from './delete';
+import unzip from './unzipper';
 
 export default class Files {
-  static unzip = unzip
-  static deleteFolder = deleteFolder
+  static unzip = unzip;
+  static deleteFolder = deleteFolder;
 }

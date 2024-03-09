@@ -1,5 +1,5 @@
-import parseUSX from './usxContentParser'
+import parseUSX from './usxContentParser';
 
 export default class usxParser {
-  static parseUSX = parseUSX
+  static parseUSX = parseUSX;
 }

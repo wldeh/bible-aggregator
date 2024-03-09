@@ -1,44 +1,44 @@
 //rewrite
-import * as types from 'src/types/processingTypes'
-import cheerio from 'cheerio'
-import fs from 'fs'
-import path from 'path'
-import { DOMParser } from 'xmldom'
+import * as types from 'src/types';
+import cheerio from 'cheerio';
+import fs from 'fs';
+import path from 'path';
+import { DOMParser } from 'xmldom';
 
-import Directory from '../directory'
+import Directory from '../directory';
 
 export default async function parseUSX(folder: string): Promise<types.Verse[]> {
-  let array: types.Verse[] = []
-  const infoFile = fs.readFileSync(path.join(folder, 'metadata.xml'))
-  const $I = cheerio.load(infoFile)
+  let array: types.Verse[] = [];
+  const infoFile = fs.readFileSync(path.join(folder, 'metadata.xml'));
+  const $I = cheerio.load(infoFile);
 
-  const files = await Directory.readFolder(folder)
-  const usxFiles = files.filter((path) => path.endsWith('.usx'))
+  const files = await Directory.readFolder(folder);
+  const usxFiles = files.filter((path) => path.endsWith('.usx'));
 
   for (const file of usxFiles) {
-    let verses
-    const usxData = await fs.promises.readFile(file)
-    const $ = cheerio.load(usxData, { xmlMode: true })
+    let verses;
+    const usxData = await fs.promises.readFile(file);
+    const $ = cheerio.load(usxData, { xmlMode: true });
 
-    const sid = $('*').filter(function () {
-      return $(this).attr('sid') !== undefined
-    })
+    const sid = $('*').filter(function() {
+      return $(this).attr('sid') !== undefined;
+    });
 
     if (sid.length > 0) {
-      let xmlString = fs.readFileSync(file).toString()
-      let parser = new DOMParser()
-      let xmlDoc = parser.parseFromString(xmlString, 'text/xml')
-      let tags = xmlDoc.getElementsByTagName('verse')
+      let xmlString = fs.readFileSync(file).toString();
+      let parser = new DOMParser();
+      let xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+      let tags = xmlDoc.getElementsByTagName('verse');
       verses = Array.from(tags)
         .map((verse) => {
           if ((verse as any).hasAttribute('sid')) {
-            let chapterVerse = (verse as any).getAttribute('sid').split(' ')[1]
-            let [chapter, verseNumber] = chapterVerse.split(':')
-            let textContent = ''
-            let nextSibling = (verse as any).nextSibling
+            let chapterVerse = (verse as any).getAttribute('sid').split(' ')[1];
+            let [chapter, verseNumber] = chapterVerse.split(':');
+            let textContent = '';
+            let nextSibling = (verse as any).nextSibling;
             while (nextSibling && nextSibling.nodeName !== 'verse') {
-              textContent += nextSibling.textContent
-              nextSibling = nextSibling.nextSibling
+              textContent += nextSibling.textContent;
+              nextSibling = nextSibling.nextSibling;
             }
             return {
               book: $I(
@@ -57,20 +57,20 @@ export default async function parseUSX(folder: string): Promise<types.Verse[]> {
               text: textContent
                 .trim()
                 .split(`\n`)
-                [textContent.trim().split(`\n`).length - 1].trim()
-            }
+                [textContent.trim().split(`\n`).length - 1].trim(),
+            };
           }
         })
         .filter((a) => a)
-        .filter((a) => a.verse && a.text)
+        .filter((a) => a.verse && a.text);
     } else {
-      verses = $('para').map(function () {
-        let chapterNumber = $(this).prevAll('chapter').first().attr('number')
+      verses = $('para').map(function() {
+        let chapterNumber = $(this).prevAll('chapter').first().attr('number');
         return $(this)
           .find('verse')
-          .map(function () {
-            let verseNumber = $(this).attr('number')
-            let verseText = ($(this)[0] as any)?.nextSibling?.nodeValue?.trim()
+          .map(function() {
+            let verseNumber = $(this).attr('number');
+            let verseText = ($(this)[0] as any)?.nextSibling?.nodeValue?.trim();
             return {
               book: $I(
                 `name[id="book-${path
@@ -85,15 +85,15 @@ export default async function parseUSX(folder: string): Promise<types.Verse[]> {
                 .replace(/third/i, '3'),
               chapter: chapterNumber,
               verse: verseNumber,
-              text: verseText.trim()
-            }
+              text: verseText.trim(),
+            };
           })
-          .get()
-      })
+          .get();
+      });
     }
 
-    array = [...array, ...verses]
+    array = [...array, ...verses];
   }
 
-  return array
+  return array;
 }
