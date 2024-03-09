@@ -1,0 +1,8 @@
+{
+    "root": true,
+    "extends": ["fbjs"],
+    "ignorePatterns": ["node_modules", "dist"],
+    "rules": {
+      "import/order": "off"
+    }
+  }
