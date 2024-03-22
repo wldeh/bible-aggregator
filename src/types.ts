@@ -1,3 +1,31 @@
+import { z } from 'zod';
+
+const languageSchema = z.object({
+  name: z.string(),
+  code: z.string(),
+  level: z.string(),
+});
+
+const countrySchema = z.object({
+  name: z.string(),
+  code: z.string(),
+});
+
+export const versionInfoSchema = z.object({
+  id: z.string(),
+  version: z.string(),
+  description: z.string(),
+  scope: z.string(),
+  language: languageSchema,
+  country: countrySchema,
+  numeralSystem: z.string(),
+  script: z.string(),
+  archivist: z.string(),
+  copyright: z.string(),
+  localVersionName: z.string(),
+  localVersionAbbreviation: z.string(),
+});
+
 export interface Verse {
   book: string | undefined
   chapter: string | undefined
