@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jest",
     "build": "tsup src/index.ts --dts",
-    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "format": "prettier --write 'src/**/*.{ts,tsx}'",
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
     "prepare": "husky install"
   },
   "author": "wldeh",
@@ -29,7 +29,8 @@
     "@types/jest": "^29.4.0",
     "@types/node": "^18.11.9",
     "@types/node-fetch": "^2.6.3",
-    "@vitest/coverage-c8": "^0.28.4",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
     "eslint": "^8.57.0",
     "eslint-config-fbjs": "^4.0.0",
     "husky": "^7.0.4",
@@ -39,7 +40,6 @@
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
     "tsup": "^6.5.0",
-    "tsx": "^3.12.1",
     "typescript": "^4.9.5"
   }
 }
